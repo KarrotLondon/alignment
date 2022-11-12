@@ -73,8 +73,10 @@
                         </a>
                         <a href="{{ url_for('logged.links') }}" class="navbar-item">
                             Links
-                            {% if new_links > 0 %}
-                                <span class="badge">{{ new_links }}</span>
+                            {% if new_links %}
+                                {% if new_links > 0 %}
+                                    <span class="badge">{{ new_links }}</span>
+                                {% endif %}
                             {% endif %}
                         </a>
                         <a href="{{ url_for('auth.logout') }}" class="navbar-item">

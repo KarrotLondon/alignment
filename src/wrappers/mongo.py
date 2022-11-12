@@ -103,7 +103,7 @@ class Mongo:
     
     def no_link_requests(self, user_id: str) -> int:
         user = self.get_user_by_id(str(user_id))
-
+        print(user)
         return len([i for i in user.links if i.pending and i.requested])
 
 
