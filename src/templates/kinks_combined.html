@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form method="POST" action="/kink">
+    <table class="table is-hoverable is-fullwidth">
+        <thead>
+            <tr>
+                <th> Kink Name  </th>
+                <th> {{ user }} Experience </th>
+                <th> {{ user }} Frequency  </th>
+                <th> {{ user }} Enjoyment  </th>
+                <th> {{ link_user }} Experience </th>
+                <th> {{ link_user }} Frequency  </th>
+                <th> {{ link_user }} Enjoyment  </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for kink in kinks %}
+            <tr>
+                <td> {{ kink["kink_name"] }} </td> 
+                <td>
+                    {{ kink["experience"]["name"]|capitalize|replace("_"," ") }}
+                </td>
+                <td>
+                    {{ kink["frequency"]["name"]|capitalize|replace("_"," ") }}
+                </td>
+                <td>
+                    {{ kink["enjoyment"]["name"]|capitalize|replace("_"," ") }}
+                </td>
+                <td>
+                    {{ links[loop.index0]["experience"]["name"]|capitalize|replace("_"," ") }}
+                </td>
+                <td>
+                    {{ links[loop.index0]["frequency"]["name"]|capitalize|replace("_"," ") }}
+                </td>
+                <td>
+                    {{ links[loop.index0]["enjoyment"]["name"]|capitalize|replace("_"," ") }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</form>
+
+
+{% endblock %}

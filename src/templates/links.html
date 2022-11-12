@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h3 class="title">Add Links</h3>
+    <div class="box">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="notification is-danger">
+                {{ messages[0] }}
+            </div>
+        {% endif %}
+        {% endwith %}
+        <form method="POST" action="/links">
+            <div class="field has-addons">
+                <div class="control is-expanded">
+                    <input class="input is-large" type="username" name="username" placeholder="Search" autofocus="">
+                </div>
+                <div class="control">
+                    <button class="button is-block is-info is-large">Add link</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    {% if links is defined %}
+        <div class="table-container"></div>
+            <table class="table is-hoverable is-fullwidth">
+                <thead>
+                    <tr>
+                        <th> Link </th> 
+                        <th> Status </th>
+                        <th> Action </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for link in links %}
+                        <tr>
+                            <td> {{ link["username"] }} </td>
+                            <td> {% if link["pending"] %} Pending {% else %} Linked {% endif %}</td>
+                            <td> 
+                                <form method="POST" action="{{ url_for('logged.update_link') }}">
+                                    <input type="hidden" type="text" name="user_id" value="{{ link['user_id'] }}">
+                                    <div class="control">
+                                        <div class="select">
+                                            <select name="update_link" id="update_link" onchange="this.form.submit()">
+                                                <option selected></option>
+                                                {% if (link["requested"]) and (link["pending"]) %}
+                                                    <option value="Approve"> Approve </option>
+                                                    <option value="Reject"> Reject </option>
+                                                {% endif %}
+                                                <option value="View"> View </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+{% endblock %}

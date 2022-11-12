@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form method="POST" id="update-kink">
+    <div class="table-container">
+        <table class="table is-hoverable is-fullwidth">
+            <thead>
+                <tr>
+                    <th> Kink Name  </th>
+                    <th> Experience </th>
+                    <th> Frequency  </th>
+                    <th> Enjoyment  </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for kink in kinks %}
+                    <tr>
+                        <td> {{ kink["kink_name"] }} </td> 
+                        <td>
+                            <div class="control">
+                                <div class="select">
+                                    <select id="{{ kink["kink_name"] }}-experience" name="{{ kink["kink_name"] }}-experience"  onchange="submitKinks(this.form)">
+                                        <option value="" {% if kink["experience"] is none %} selected {% endif %} ></option>
+                                        <option value="NONE" {% if kink["experience"]|string == "Experience.NONE" %} selected {% endif %}>None</option>
+                                        <option value="ONCE" {% if kink["experience"]|string == "Experience.ONCE" %} selected {% endif %}>Once</option>
+                                        <option value="BEGINNER" {% if kink["experience"]|string == "Experience.BEGINNER" %} selected {% endif %}>Beginner</option>
+                                        <option value="COMPETENT" {% if kink["experience"]|string == "Experience.COMPETENT" %} selected {% endif %}>Competent</option>
+                                        <option value="EXPERT" {% if kink["experience"]|string == "Experience.EXPERT" %} selected {% endif %}>Expert</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="control">
+                                <div class="select">
+                                    <select id="{{ kink["kink_name"] }}-frequency" name="{{ kink["kink_name"] }}-frequency"  onchange="submitKinks(this.form)">
+                                        <option value="" {% if kink["frequency"] is none %} selected {% endif %} ></option>
+                                        <option value="DAILY" {% if kink["frequency"]|string == "Frequency.DAILY" %} selected {% endif %}>Daily</option>
+                                        <option value="BIWEEKLY" {% if kink["frequency"]|string == "Frequency.BIWEEKLY" %} selected {% endif %}>Bi-Weekly</option>
+                                        <option value="WEEKLY" {% if kink["frequency"]|string == "Frequency.WEEKLY" %} selected {% endif %}>Weekly</option>
+                                        <option value="FORTNIGHTLY" {% if kink["frequency"]|string == "Frequency.FORTNIGHTLY" %} selected {% endif %}>Fortnightly</option>
+                                        <option value="MONTHLY" {% if kink["frequency"]|string == "Frequency.MONTHLY" %} selected {% endif %}>Monthly</option>
+                                        <option value="QUATERLY" {% if kink["frequency"]|string == "Frequency.QUATERLY" %} selected {% endif %}>Quarterly</option>
+                                        <option value="ANUALLY" {% if kink["frequency"]|string == "Frequency.ANUALLY" %} selected {% endif %}>Annually</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="control">
+                                <div class="select">
+                                    <select id="{{ kink["kink_name"] }}-enjoyment" name="{{ kink["kink_name"] }}-enjoyment"  onchange="submitKinks(this.form)">
+                                        <option value="" {% if kink["enjoyment"] is none %} selected {% endif %} ></option>
+                                        <option value="HARD_LIMIT" {% if kink["enjoyment"]|string == "Enjoyment.HARD_LIMIT" %} selected {% endif %}>Hard Limit</option>
+                                        <option value="SOFT_LIMIT" {% if kink["enjoyment"]|string == "Enjoyment.SOFT_LIMIT" %} selected {% endif %}>Soft Limit</option>
+                                        <option value="IF_I_MUST" {% if kink["enjoyment"]|string == "Enjoyment.IF_I_MUST" %} selected {% endif %}>If I Must</option>
+                                        <option value="IMPARTIAL" {% if kink["enjoyment"]|string == "Enjoyment.IMPARTIAL" %} selected {% endif %}>Impartial</option>
+                                        <option value="SURE_ITS_FUN" {% if kink["enjoyment"]|string == "Enjoyment.SURE_ITS_FUN" %} selected {% endif %}>Sure Why Not Its Fun</option>
+                                        <option value="LIKE_IF" {% if kink["enjoyment"]|string == "Enjoyment.LIKE_IF" %} selected {% endif %}>I Like It</option>
+                                        <option value="LOVE_IT" {% if kink["enjoyment"]|string == "Enjoyment.LOVE_IT" %} selected {% endif %}>I Love It</option>
+                                        <option value="FUCKING_CANT_LIVE_WITHOUT_IT" {% if kink["enjoyment"] == "Enjoyment.FUCKING_CANT_LIVE_WITHOUT_IT" %} selected {% endif %}>I Fucking Cant Live Wihtout It</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <button class="button is-block is-info is-large is-fullwidth is-danger">Save kinks</button>
+</form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+    function getFormData($form){
+        var unindexed_array = $form.serializeArray();
+        var indexed_array = {};
+
+        $.map(unindexed_array, function(n, i){
+            indexed_array[n['name']] = n['value'];
+        });
+
+        return indexed_array;
+    }
+
+    function submitKinks(form){
+        $.ajax({
+            type:'POST',
+            url:'/kink',
+            data: getFormData($(form)),
+            success:function()
+            {
+                console.log("success")
+            }
+        })
+    };
+  </script>
+
+
+{% endblock %}

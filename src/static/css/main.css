@@ -1,0 +1,63 @@
+.hero.is-primary{
+    background-color: black;
+}
+
+.hero.is-primary .title{
+    color: red;
+}
+
+.navbar.is-danger {
+    background-color: red;
+    color: #fff;
+}
+
+.table.is-hoverable tbody tr:not(.is-selected):hover {
+    background-color: red;
+}
+
+.table {
+    background-color: #000;
+    color: #fff;
+}
+
+.table thead td, .table thead th {
+    border-width: 0 0 2px;
+    color: #f00;
+}
+
+.button.is-danger {
+    background-color: red;
+}
+
+.select:not(.is-multiple):not(.is-loading)::after {
+    border-color: red;
+    right: 1.125em;
+    z-index: 4;
+}
+
+.button.is-primary {
+    background-color: black;
+}
+
+.box {
+    background-color: #919191;
+}
+
+.button.is-light {
+    background-color: #919191;
+}
+
+.input, .textarea {
+    background-color: #c9c9c9;
+    border-color: #c1c1c1;
+}
+
+.badge {
+    position: absolute;
+    top: 1px;
+    right: -7px;
+    padding: 0px 6px;
+    border-radius: 50%;
+    background: white;
+    color: red;
+  }
