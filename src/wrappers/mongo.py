@@ -1,11 +1,16 @@
-from typing import Any, Optional
+from typing import Any, List, Optional
+
 import pymongo
-from src.models.link import Link
-from src.models.user import User  
-from src.models.kink import Kink
-from fastapi.encoders import jsonable_encoder 
-from typing import Any, List
 from bson import ObjectId
+from fastapi.encoders import jsonable_encoder
+from src.migrations.data_migrations import DataMigrations
+
+from src.models.enums import Roles
+from src.models.kink import Kink
+from src.models.kinks import Kinks
+from src.models.link import Link
+from src.models.user import User
+
 
 class Mongo:
     def __init__(self, uri):
@@ -26,12 +31,34 @@ class Mongo:
     def get_user_by_username(self, username) -> Optional[User]:
         user = self.find_user(username)
         if user:
-            return User(_id=user.get("_id"), username=user.get("username"), password=user.get("password"), email=user.get("email"), kinks=user.get("kinks"), links=user.get("links"))
+            return self.create_user(user)
+
+    def create_user(self, user):
+        try:
+            return User(
+                _id=user.get("_id"),
+                username=user.get("username"),
+                password=user.get("password"),
+                email=user.get("email"),
+                kinks=Kinks(sub=user.get("kinks").get("sub"), dom=user.get("kinks").get("dom")),
+                links=user.get("links")
+            )
+        except Exception:
+            migration_checker = DataMigrations(user)
+            user_update = migration_checker.run()
+            if user_update:
+                self.update_user(user_update)
+    
+    def update_user(self, user: User):
+        self.users_table.update_one(
+            {'_id': str(user.id)},
+            {'$set': jsonable_encoder(user)}
+        )     
     
     def get_user_by_id(self, id) -> Optional[User]:
         user = self.users_table.find_one({"_id": id})
         if user:
-            return User(_id=user.get("_id"), username=user.get("username"), password=user.get("password"), email=user.get("email"), kinks=user.get("kinks"), links=user.get("links"))
+            return self.create_user(user)
 
     def add_kink(self, user_id: str, kink: Kink):
         self.users_table.find_one_and_update(
@@ -42,10 +69,11 @@ class Mongo:
     def add_user(self, user: User) -> User:
         return self.users_table.insert_one(jsonable_encoder(user))
     
-    def update_kinks(self, user_id: str, kinks: List[Kink]):
+    def update_kinks(self, user_id: str, kinks: List[Kink], role: Roles):
+        print(role.value)
         self.users_table.update_one(
             {'_id': str(user_id)},
-            {'$set': {"kinks": jsonable_encoder(kinks)}}
+            {'$set': {f"kinks.{role.value}":  jsonable_encoder(kinks)}}
         )
     
     def update_links(self, user_id: str, link: Link):

@@ -4,7 +4,7 @@ from src.models.link import Link
 from . import db, kink_list
 from flask_login import login_required, current_user
 from src.models.kink import Kink
-from src.models.enums import Experience, Frequency, Enjoyment
+from src.models.enums import Experience, Frequency, Enjoyment, Roles
 
 logged = Blueprint('logged', __name__)
 
@@ -18,19 +18,19 @@ def profile():
   return render_template('profile.html', username=current_user.username)
 
 
-@logged.route('/kink')
+@logged.route('/kink-sub')
 @login_required
-def kinks():
-  user_kinks = current_user.kinks
+def kinks_sub():
+  user_kinks = current_user.kinks.sub
   user_kinks_names = [list(kink.dict(include={'kink_name'}).values())[0] for kink in user_kinks]
   for kink in kink_list:
     if kink not in user_kinks_names:
       user_kinks.append(Kink(kink_name=kink))
   return render_template('kinks.html', kinks=sorted(user_kinks, key=lambda x: x.kink_name))
 
-@logged.route('/kink', methods=['POST'])
+@logged.route('/kink-sub', methods=['POST'])
 @login_required
-def kinks_post():
+def kinks_sub_post():
   kinks_to_update = []
   for kink in kink_list:
     kink_name = kink
@@ -51,7 +51,7 @@ def kinks_post():
       else: 
         experience = None
       kinks_to_update.append(Kink(kink_name=kink_name, experience=experience, frequency=frequency, enjoyment=enjoyment))
-  db.update_kinks(current_user.id, kinks_to_update)
+  db.update_kinks(current_user.id, kinks_to_update, Roles.SUB)
   return jsonify(success=True)
 
 @logged.route('/links')

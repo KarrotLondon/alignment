@@ -14,7 +14,7 @@ class User(UserMixin, BaseModel):
     email: str | None = None
     username: str
     password: str
-    kinks: List[Kinks] = []
+    kinks: Kinks
     links: List[Link] = []
     
     class Config:

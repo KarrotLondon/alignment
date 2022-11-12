@@ -25,3 +25,7 @@ class Experience(Enum):
     BEGINNER = 2
     COMPETENT = 3
     EXPERT = 5
+    
+class Roles(Enum):
+    SUB = "sub"
+    DOM = "dom"

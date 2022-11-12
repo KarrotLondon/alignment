@@ -8,8 +8,7 @@ from src.models.id import PyObjectId
 from src.models.kink import Kink
 
 
-class Kink(BaseModel):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+class Kinks(BaseModel):
     sub: List[Kink]
     dom: List[Kink]
     
