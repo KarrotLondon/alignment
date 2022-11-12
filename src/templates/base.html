@@ -68,12 +68,13 @@
                         <a href="{{ url_for('logged.kinks_sub') }}" class="navbar-item">
                             Sub Kinks
                         </a>
+                        <a href="{{ url_for('logged.kinks_dom') }}" class="navbar-item">
+                            Dom Kinks
+                        </a>
                         <a href="{{ url_for('logged.links') }}" class="navbar-item">
                             Links
-                            {% if new_links %}
-                                {% if new_links > 0 %}
-                                    <span class="badge">{{ new_links }}</span>
-                                {% endif %}
+                            {% if new_links > 0 %}
+                                <span class="badge">{{ new_links }}</span>
                             {% endif %}
                         </a>
                         <a href="{{ url_for('auth.logout') }}" class="navbar-item">

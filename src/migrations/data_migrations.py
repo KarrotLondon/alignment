@@ -11,9 +11,10 @@ class DataMigrations:
         self.user = user
     
     def run(self):
-        user = self.migration_1()
-        if user:
-            return self.migration_1()
+        self.user = self.migration_1()
+        self.user = self.migration_2()
+        
+        return self.user
     
     def migration_1(self):
         if type(self.user.get("kinks")) == type([]):
@@ -25,3 +26,16 @@ class DataMigrations:
                 kinks=Kinks(sub=self.user.get("kinks"), dom=[]),
                 links=self.user.get("links")
             )
+        return self.user
+    
+    def migration_2(self):
+        if not self.user.get("links"):
+            return User(
+                _id=self.user.get("_id"),
+                username=self.user.get("username"),
+                password=self.user.get("password"),
+                email=self.user.get("email"),
+                kinks=self.user.get("kinks"),
+                links=[]
+            )
+        return self.user

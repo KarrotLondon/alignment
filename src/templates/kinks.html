@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="title is-fullwidth">
-    {{ state }} Kinks
+    {{ state | capitalize  }} Kinks
 </div>
 
 <form method="POST" id="update-kink">
@@ -94,7 +94,7 @@
     function submitKinks(form){
         $.ajax({
             type:'POST',
-            url:'/kink-sub',
+            url:'/kink-{{ state }}',
             data: getFormData($(form)),
             success:function()
             {

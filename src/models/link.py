@@ -1,6 +1,7 @@
 from bson import ObjectId
 from pydantic import BaseModel, Field
 from typing import List
+from src.models.enums import Roles
 from src.models.kink import Kink
 
 from src.models.id import PyObjectId
@@ -12,6 +13,7 @@ class Link(BaseModel):
     pending: bool
     mutual_required: bool
     requested: bool
+    relationships: List[Roles]
     
     class Config:
         arbitrary_types_allowed = True

@@ -11,7 +11,17 @@
         {% endif %}
         {% endwith %}
         <form method="POST" action="/links">
-            <div class="field has-addons">
+            <div class="control">
+                <div class="select is-multiple is-large is-fullwidth">
+                    <select name="kink_lists" id="kink_lists" multiple size="4">
+                        <option value="share-sub"> Share my submissive kinks </option>
+                        <option value="share-dom">Share my dominant kinks </option>
+                        <option value="request-sub">Request their submissive kinks </option>
+                            <option value="request-dom">Request their dominant kinks </option>
+                    </select>
+                </div>
+            </div?
+            <div class="field has-addons">                    
                 <div class="control is-expanded">
                     <input class="input is-large" type="username" name="username" placeholder="Search" autofocus="">
                 </div>
@@ -28,6 +38,7 @@
                     <tr>
                         <th> Link </th> 
                         <th> Status </th>
+                        <th> Kink Lists Shared </th>
                         <th> Action </th>
                     </tr>
                 </thead>
@@ -36,6 +47,11 @@
                         <tr>
                             <td> {{ link["username"] }} </td>
                             <td> {% if link["pending"] %} Pending {% else %} Linked {% endif %}</td>
+                            <td>
+                                {% for role in link['relationships'] %}
+                                    {{ role.value | capitalize }}
+                                {% endfor %}
+                            </td>
                             <td> 
                                 <form method="POST" action="{{ url_for('logged.update_link') }}">
                                     <input type="hidden" type="text" name="user_id" value="{{ link['user_id'] }}">
@@ -47,7 +63,11 @@
                                                     <option value="Approve"> Approve </option>
                                                     <option value="Reject"> Reject </option>
                                                 {% endif %}
-                                                <option value="View"> View </option>
+                                                {% if not (link["pending"]) %}
+                                                    {% for role in link['relationships'] %}
+                                                        <option value="view-{{ role.value }}"> View {{ role.value | capitalize }} </option>
+                                                    {% endfor %}
+                                                {% endif %}
                                             </select>
                                         </div>
                                     </div>

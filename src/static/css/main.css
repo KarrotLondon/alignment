@@ -61,3 +61,7 @@
     background: white;
     color: red;
   }
+
+.select select {
+background-color: #919191;
+}

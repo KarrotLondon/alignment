@@ -70,7 +70,6 @@ class Mongo:
         return self.users_table.insert_one(jsonable_encoder(user))
     
     def update_kinks(self, user_id: str, kinks: List[Kink], role: Roles):
-        print(role.value)
         self.users_table.update_one(
             {'_id': str(user_id)},
             {'$set': {f"kinks.{role.value}":  jsonable_encoder(kinks)}}
@@ -104,6 +103,7 @@ class Mongo:
     
     def no_link_requests(self, user_id: str) -> int:
         user = self.get_user_by_id(str(user_id))
-        return len([i for i in user.links if i.pending and not i.requested])
+
+        return len([i for i in user.links if i.pending and i.requested])
 
 
