@@ -1,9 +1,11 @@
-from bson import ObjectId
-from pydantic import BaseModel, Field
-from src.models.enums import Frequency, Enjoyment, Experience
 from typing import Optional
 
+from bson import ObjectId
+from pydantic import BaseModel, Field
+
+from src.models.enums import Enjoyment, Experience, Frequency
 from src.models.id import PyObjectId
+
 
 class Kink(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
@@ -11,8 +13,7 @@ class Kink(BaseModel):
     experience: Optional[Experience] = None
     frequency: Optional[Frequency] = None
     enjoyment: Optional[Enjoyment] = None
-    
-    
+
     class Config:
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
@@ -22,6 +23,6 @@ class Kink(BaseModel):
                 "kink_name": "Jane Doe",
                 "experience": "None",
                 "frequency": "jdoe@example.com",
-                "enjoyment": "gfdhgdhdgfsdsgsdfg"
+                "enjoyment": "gfdhgdhdgfsdsgsdfg",
             }
         }

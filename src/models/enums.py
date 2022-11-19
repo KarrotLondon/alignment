@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class Frequency(Enum):
     DAILY = 1
     BIWEEKLY = 3
@@ -8,7 +9,8 @@ class Frequency(Enum):
     MONTHLY = 30
     QUATERLY = 120
     ANUALLY = 365
-    
+
+
 class Enjoyment(Enum):
     HARD_LIMIT = 0
     SOFT_LIMIT = 1
@@ -18,14 +20,16 @@ class Enjoyment(Enum):
     LIKE_IF = 16
     LOVE_IT = 32
     FUCKING_CANT_LIVE_WITHOUT_IT = 64
-    
+
+
 class Experience(Enum):
     NONE = 0
     ONCE = 1
     BEGINNER = 2
     COMPETENT = 3
     EXPERT = 5
-    
-class Roles(Enum):
+
+
+class Roles(str, Enum):
     SUB = "sub"
     DOM = "dom"

@@ -16,7 +16,7 @@ class User(UserMixin, BaseModel):
     password: str
     kinks: Kinks
     links: List[Link] = []
-    
+
     class Config:
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
@@ -25,6 +25,6 @@ class User(UserMixin, BaseModel):
                 "id": "hadasjda",
                 "username": "Jane Doe",
                 "email": "jdoe@example.com",
-                "password": "gfdhgdhdgfsdsgsdfg"
+                "password": "gfdhgdhdgfsdsgsdfg",
             }
         }

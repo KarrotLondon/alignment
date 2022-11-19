@@ -1,17 +1,15 @@
-from typing import List, Optional
+from typing import List
 
 from bson import ObjectId
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
-from src.models.enums import Enjoyment, Experience, Frequency
-from src.models.id import PyObjectId
 from src.models.kink import Kink
 
 
 class Kinks(BaseModel):
     sub: List[Kink]
     dom: List[Kink]
-    
+
     class Config:
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
@@ -21,6 +19,6 @@ class Kinks(BaseModel):
                 "kink_name": "Jane Doe",
                 "experience": "None",
                 "frequency": "jdoe@example.com",
-                "enjoyment": "gfdhgdhdgfsdsgsdfg"
+                "enjoyment": "gfdhgdhdgfsdsgsdfg",
             }
         }

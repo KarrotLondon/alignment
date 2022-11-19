@@ -2,9 +2,28 @@
 
 {% block content %}
 
-<div>
-    <h1> {{ link_user }} {{ role | capitalize  }} Kinks
+<div class="columns">
+    <div class="column">
+        <h1 class="title"> {{ link['username']| capitalize }}'s' {{ role | capitalize  }} Kinks
+    </div>
+    <div class="column">
+        <form method="POST" action="{{ url_for('logged.view_combined_kinks') }}">
+            <input type="hidden" type="text" name="user_id" value="{{ link['id'] }}">
+            <div class="control">
+                <div class="select">
+                    <select name="view_relationship" id="view_relationship" onchange="this.form.submit()">
+                        <option selected></option>
+                        {% for relationship in relationships %}
+                            <option value={{ relationship['name'] | capitalize }}> {{ relationship['name'] | capitalize }} </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
+
+
 
 <form method="POST" action="/kink">
     <table class="table is-hoverable is-fullwidth">
