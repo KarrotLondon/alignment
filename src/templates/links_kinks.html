@@ -9,10 +9,11 @@
     <div class="column">
         <form method="POST" action="{{ url_for('logged.view_combined_kinks') }}">
             <input type="hidden" type="text" name="user_id" value="{{ link['id'] }}">
+            <input type="hidden" type="text" name="link_role" value="{{ role }}">
             <div class="control">
                 <div class="select">
                     <select name="view_relationship" id="view_relationship" onchange="this.form.submit()">
-                        <option selected></option>
+                        <option selected>Select which kink list of yours to compare</option>
                         {% for relationship in relationships %}
                             <option value={{ relationship['name'] | capitalize }}> {{ relationship['name'] | capitalize }} </option>
                         {% endfor %}

@@ -16,26 +16,38 @@
             </tr>
         </thead>
         <tbody>
-            {% for kink in links %}
+            {% for kink in kinks %}
             <tr>
                 <td> {{ kink["kink_name"] }} </td> 
                 <td>
-                    {{ kink["experience"]["name"]|capitalize|replace("_"," ") }}
+                    {% if kink["user_kink"] %}
+                        {{ kink["user_kink"]["experience"]["name"] | capitalize | replace("_"," ") }}
+                    {% endif %}
                 </td>
                 <td>
-                    {{ kink["frequency"]["name"]|capitalize|replace("_"," ") }}
+                    {% if kink["user_kink"] %}
+                        {{ kink["user_kink"]["frequency"]["name"] | capitalize| replace("_"," ") }}
+                    {% endif %}
                 </td>
                 <td>
-                    {{ kink["enjoyment"]["name"]|capitalize|replace("_"," ") }}
+                    {% if kink["user_kink"] %}
+                        {{ kink["user_kink"]["enjoyment"]["name"] | capitalize| replace("_"," ") }}
+                    {% endif %}
                 </td>
                 <td>
-                    {{ links[loop.index0]["experience"]["name"]|capitalize|replace("_"," ") }}
+                    {% if kink["link_kink"] %}
+                        {{ kink["link_kink"]["experience"]["name"] | capitalize | replace("_"," ") }}
+                    {% endif %}
                 </td>
                 <td>
-                    {{ links[loop.index0]["frequency"]["name"]|capitalize|replace("_"," ") }}
+                    {% if kink["link_kink"] %}
+                        {{ kink["link_kink"]["frequency"]["name"] | capitalize | replace("_"," ") }}
+                    {% endif %}
                 </td>
                 <td>
-                    {{ links[loop.index0]["enjoyment"]["name"]|capitalize|replace("_"," ") }}
+                    {% if kink["link_kink"] %}
+                        {{ kink["link_kink"]["enjoyment"]["name"] | capitalize | replace("_"," ") }}
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}

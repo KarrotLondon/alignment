@@ -4,6 +4,7 @@ from flask import Blueprint, flash, jsonify, redirect, render_template, request,
 from flask_login import current_user, login_required
 from werkzeug.wrappers import Response
 
+from src.models.combined_kink import CombinedKink
 from src.models.enums import Enjoyment, Experience, Frequency, Roles
 from src.models.kink import Kink
 from src.models.link import Link
@@ -29,7 +30,7 @@ def profile() -> str:
 @login_required
 def kinks_sub() -> str:
     user_kinks = cast(User, current_user).kinks.sub
-    get_kinks(user_kinks)
+    complete_kinks(user_kinks)
     return render_template(
         "kinks.html",
         kinks=sorted(user_kinks, key=lambda x: x.kink_name),
@@ -41,7 +42,7 @@ def kinks_sub() -> str:
 @login_required
 def kinks_dom() -> str:
     user_kinks = cast(User, current_user).kinks.dom
-    get_kinks(user_kinks)
+    complete_kinks(user_kinks)
     return render_template(
         "kinks.html",
         kinks=sorted(user_kinks, key=lambda x: x.kink_name),
@@ -49,7 +50,7 @@ def kinks_dom() -> str:
     )
 
 
-def get_kinks(user_kinks: List[Kink]) -> None:
+def complete_kinks(user_kinks: List[Kink]) -> None:
     user_kinks_names = [list(kink.dict(include={"kink_name"}).values())[0] for kink in user_kinks]
     for kink in kink_list:
         if kink not in user_kinks_names:
@@ -180,7 +181,7 @@ def update_link() -> Union[str, Response]:
         if not link:
             raise NotImplementedError
         kink_list_action = action[5:]
-        link_kinks = link.kinks.sub if kink_list_action == "sub" else link.kinks.dom
+        link_kinks = link.get_kinks_for_role(kink_list_action)
         link_kinks_names = [list(kink.dict(include={"kink_name"}).values())[0] for kink in link_kinks]
         relationships = [lin.relationships for lin in cast(User, current_user).links if lin.user_id == user_id][0]
         for kink in kink_list:
@@ -201,4 +202,30 @@ def update_link() -> Union[str, Response]:
 @logged.route("/combined-kinks", methods=["POST"])
 @login_required
 def view_combined_kinks() -> str:
-    return ""
+    user = cast(User, current_user)
+    user_id = request.form.get("user_id")
+    link_kinks = get_kinks(user_id, request.form.get("link_role"))
+    user_kinks = user.get_kinks_for_role(request.form.get("view_relationship"))
+    data: List[CombinedKink] = []
+    print(len(kink_list))
+    print(len(link_kinks))
+    for kink in kink_list:
+        user_kink = user_kinks.pop(0) if len(user_kinks) > 0 and user_kinks[0].kink_name == kink else None
+        link_kink = link_kinks.pop(0) if len(link_kinks) > 0 and link_kinks[0].kink_name == kink else None
+        if kink == "Cages (locked inside of)":
+            print(kink)
+            print(link_kink)
+            print(link_kinks[0])
+        if link_kink:
+            assert link_kink.kink_name == kink
+        data.append(CombinedKink(kink_name=kink, user_kink=user_kink, link_kink=link_kink))
+    return render_template(
+        "kinks_combined.html", user=user.username, link_user=cast(User, db.get_user_by_id(user_id)).username, kinks=data
+    )
+
+
+def get_kinks(user_id: Optional[str], role: Optional[str]) -> List[Kink]:
+    if not user_id:
+        raise NotImplementedError
+    user = cast(User, db.get_user_by_id(user_id))
+    return user.get_kinks_for_role(role)
