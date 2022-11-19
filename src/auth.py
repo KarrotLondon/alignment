@@ -2,6 +2,7 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import login_user, login_required, logout_user
 from src import db
 from werkzeug.security import generate_password_hash, check_password_hash
+from src.models.kinks import Kinks
 
 from src.models.user import User
 
@@ -39,7 +40,7 @@ def signup_post():
         flash('Username address already exists')
         return redirect(url_for('auth.signup'))
 
-    new_user = User(email=email, username=username, password=generate_password_hash(password, method='sha256'))
+    new_user = User(email=email, username=username, password=generate_password_hash(password, method='sha256'), kinks=Kinks(sub=[], dom=[]))
     
     db.add_user(new_user)
     
